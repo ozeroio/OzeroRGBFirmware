@@ -18,7 +18,7 @@ ChaseEffect *ChaseEffect::getInstance() {
 
 uint32_t ChaseEffect::loop() {
 	auto strip = Strip::getInstance();
-	auto state = (ChaseEffectState *) greenState;
+	auto state = static_cast<ChaseEffectState *>(greenState);
 
 	position += state->invertDir ? 1 : -1;
 	for (uint32_t i = 0; i < NUM_LEDS; i += state->fillLen + state->gapLen) {
@@ -39,7 +39,7 @@ uint32_t ChaseEffect::getSerializationSize() {
 }
 
 void ChaseEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (ChaseEffectState *) greenState;
+	auto state = static_cast<ChaseEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->red);
 	randomAccess->writeUnsignedChar(state->green);
@@ -52,7 +52,7 @@ void ChaseEffect::serialize(RandomAccess *randomAccess) {
 }
 
 void ChaseEffect::deserialize(RandomAccess *randomAccess) {
-	auto state = (ChaseEffectState *) blueState;
+	auto state = static_cast<ChaseEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->red = randomAccess->readUnsignedChar();
 	state->green = randomAccess->readUnsignedChar();

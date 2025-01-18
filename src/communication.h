@@ -44,7 +44,7 @@ public:
 
 	static Communication *getInstance();
 
-	static void taskHandler(const void *parameters);
+	static void taskHandler(void *parameters);
 
 	static void callback(const char *topic, uint8_t *payload, uint32_t length);
 

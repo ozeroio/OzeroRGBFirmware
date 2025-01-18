@@ -27,33 +27,24 @@ void Communication::setup() {
 	// Setup MAC address based on DEVICE_ID.
 	sprintf(deviceMacAddress, DEVICE_MAC_ADDRESS_PATTERN, DEVICE_ID);
 
-	Serial.print("WiFi.connecting to: ");
-	Serial.println(COMM_WIFI_SSID);
+	log_i("WiFi.connecting to: %s", COMM_WIFI_SSID);
 
 	while (WiFiClass::status() != WL_CONNECTED) {
 		vTaskDelay(500 / portTICK_PERIOD_MS);
-		Serial.print("WiFi.status: ");
-		Serial.println(WiFiClass::status());
-		Serial.println("Retrying in 0.5 second.");
+		log_i("WiFi.status: %s. Retrying in 0.5 second.", WiFiClass::status());
 	}
 
-	Serial.println("WiFi connected.");
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
+	log_i("WiFi connected. IP address: %s", WiFi.localIP());
 
 	mqtt->setServer(COMM_MQTT_BROKER_HOST, COMM_MQTT_BROKER_PORT);
 	mqtt->setCallback(callback);
 
 	while (!mqtt->connected()) {
-		Serial.print("MQTT client id: ");
-		Serial.println(deviceMacAddress);
-		Serial.println("Connecting to mqtt broker...");
+		log_i("MQTT client id: %s. Connecting to mqtt broker...", deviceMacAddress);
 		if (mqtt->connect(deviceMacAddress, COMM_MQTT_BROKER_USER, COMM_MQTT_BROKER_PASS)) {
-			Serial.println("Public mqtt broker connected.");
+			log_i("Public mqtt broker connected.");
 		} else {
-			Serial.print("Connection failed with state: ");
-			Serial.println(mqtt->state());
-			Serial.print("Retrying in 1 second.");
+			log_i("Connection failed with state: %s. Retrying in 1 second.", mqtt->state());
 			vTaskDelay(500 / portTICK_PERIOD_MS);
 		}
 	}
@@ -214,8 +205,8 @@ void Communication::communicationLoop() {
  *
  * @param parameters The communication class instance.
  */
-void Communication::taskHandler(const void *parameters) {
-	auto comm = (Communication *) parameters;
+void Communication::taskHandler(void *parameters) {
+	auto comm = static_cast<Communication *>(parameters);
 
 	for (;;) {
 		comm->communicationLoop();

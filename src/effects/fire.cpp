@@ -43,7 +43,7 @@ void FireEffect::setup() {
 
 uint32_t FireEffect::loop() {
 	auto strip = Strip::getInstance();
-	auto state = (FireEffectState *) greenState;
+	auto state = static_cast<FireEffectState *>(greenState);
 
 	for (int i = 0; i < state->numSegments; i++) {
 
@@ -102,7 +102,7 @@ uint32_t FireEffect::loop() {
 }
 
 uint32_t FireEffect::getSerializationSize() {
-	auto state = (FireEffectState *) greenState;
+	auto state = static_cast<FireEffectState *>(greenState);
 
 	// numSegments * its size.
 	// NOTE: It might introduce padding: https://www.geeksforgeeks.org/is-sizeof-for-a-struct-equal-to-the-sum-of-sizeof-of-each-member/.
@@ -113,7 +113,7 @@ uint32_t FireEffect::getSerializationSize() {
 }
 
 void FireEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (FireEffectState *) greenState;
+	auto state = static_cast<FireEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->numSegments);
 	for (int i = 0; i < state->numSegments; i++) {
@@ -131,9 +131,9 @@ void FireEffect::serialize(RandomAccess *randomAccess) {
 
 void FireEffect::deserialize(RandomAccess *randomAccess) {
 	auto numSegments = min(uint8_t(FIRE_MAX_NUM_SEGMENTS), randomAccess->readUnsignedChar());
-	freeStateMemory((FireEffectState *) blueState);
+	freeStateMemory(static_cast<FireEffectState *>(blueState));
 	blueState = mallocStateMemory(numSegments);
-	auto state = (FireEffectState *) blueState;
+	auto state = static_cast<FireEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->numSegments = numSegments;
 	for (int i = 0; i < numSegments; i++) {

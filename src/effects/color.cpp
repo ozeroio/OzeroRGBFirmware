@@ -19,7 +19,7 @@ void ColorEffect::setup() {
 	Effect::setup();
 
 	auto strip = Strip::getInstance();
-	auto state = (ColorEffectState *) greenState;
+	auto state = static_cast<ColorEffectState *>(greenState);
 
 	if (state->randomize) {
 		for (int32_t i = 0; i < Strip::numLeds(); i++) {
@@ -43,7 +43,7 @@ uint32_t ColorEffect::getSerializationSize() {
 }
 
 void ColorEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (ColorEffectState *) greenState;
+	auto state = static_cast<ColorEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->red);
 	randomAccess->writeUnsignedChar(state->green);
@@ -53,7 +53,7 @@ void ColorEffect::serialize(RandomAccess *randomAccess) {
 }
 
 void ColorEffect::deserialize(RandomAccess *randomAccess) {
-	auto state = (ColorEffectState *) blueState;
+	auto state = static_cast<ColorEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->red = randomAccess->readUnsignedChar();
 	state->green = randomAccess->readUnsignedChar();

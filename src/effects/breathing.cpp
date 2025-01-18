@@ -22,7 +22,7 @@ void BreathingEffect::setup() {
 	Effect::setup();
 
 	auto strip = Strip::getInstance();
-	auto state = (BreathingEffectState *) greenState;
+	auto state = static_cast<BreathingEffectState *>(greenState);
 
 	auto brightness = Device::getInstance()->getBrightness();
 
@@ -52,7 +52,7 @@ void BreathingEffect::setup() {
 }
 
 uint32_t BreathingEffect::loop() {
-	auto state = (BreathingEffectState *) greenState;
+	auto state = static_cast<BreathingEffectState *>(greenState);
 
 	FastLED.setBrightness(precomputedWave[position += state->velocity]);
 	Strip::showStrip();
@@ -65,7 +65,7 @@ uint32_t BreathingEffect::getSerializationSize() {
 }
 
 void BreathingEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (BreathingEffectState *) greenState;
+	auto state = static_cast<BreathingEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->red);
 	randomAccess->writeUnsignedChar(state->green);
@@ -80,7 +80,7 @@ void BreathingEffect::serialize(RandomAccess *randomAccess) {
 }
 
 void BreathingEffect::deserialize(RandomAccess *randomAccess) {
-	auto state = (BreathingEffectState *) blueState;
+	auto state = static_cast<BreathingEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->red = randomAccess->readUnsignedChar();
 	state->green = randomAccess->readUnsignedChar();

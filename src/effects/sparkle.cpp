@@ -19,7 +19,7 @@ SparkleEffect *SparkleEffect::getInstance() {
 
 uint32_t SparkleEffect::loop() {
 	auto strip = Strip::getInstance();
-	auto state = (SparkleEffectState *) greenState;
+	auto state = static_cast<SparkleEffectState *>(greenState);
 
 	// TODO: remove from here.
 	// Why?
@@ -45,7 +45,7 @@ uint32_t SparkleEffect::getSerializationSize() {
 }
 
 void SparkleEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (SparkleEffectState *) greenState;
+	auto state = static_cast<SparkleEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->red);
 	randomAccess->writeUnsignedChar(state->green);
@@ -57,7 +57,7 @@ void SparkleEffect::serialize(RandomAccess *randomAccess) {
 }
 
 void SparkleEffect::deserialize(RandomAccess *randomAccess) {
-	auto state = (SparkleEffectState *) blueState;
+	auto state = static_cast<SparkleEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->red = randomAccess->readUnsignedChar();
 	state->green = randomAccess->readUnsignedChar();

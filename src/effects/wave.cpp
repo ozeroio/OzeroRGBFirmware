@@ -18,7 +18,7 @@ WaveEffect *WaveEffect::getInstance() {
 
 uint32_t WaveEffect::loop() {
 	auto strip = Strip::getInstance();
-	auto state = (WaveEffectState *) greenState;
+	auto state = static_cast<WaveEffectState *>(greenState);
 
 	position += state->invertDir ? 1 : -1;
 	for (int i = 0; i < Strip::numLeds(); i++) {
@@ -35,7 +35,7 @@ uint32_t WaveEffect::getSerializationSize() {
 }
 
 void WaveEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (WaveEffectState *) greenState;
+	auto state = static_cast<WaveEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->red);
 	randomAccess->writeUnsignedChar(state->green);
@@ -46,7 +46,7 @@ void WaveEffect::serialize(RandomAccess *randomAccess) {
 }
 
 void WaveEffect::deserialize(RandomAccess *randomAccess) {
-	auto state = (WaveEffectState *) blueState;
+	auto state = static_cast<WaveEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->red = randomAccess->readUnsignedChar();
 	state->green = randomAccess->readUnsignedChar();

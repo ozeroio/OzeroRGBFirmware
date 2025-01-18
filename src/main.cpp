@@ -34,6 +34,6 @@ void setup() {
 }
 
 void loop() {
-	Serial.println(xPortGetFreeHeapSize());
+	log_i(xPortGetFreeHeapSize());
 	vTaskDelay(1000 / portTICK_PERIOD_MS);
 }

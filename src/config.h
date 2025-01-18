@@ -4,7 +4,7 @@
 #include <FastLED.h>
 #include <secrets.h>
 
-#define LED_PIN (32)
+#define LED_PIN (23)
 #define COLOR_ORDER GRB
 #define CHIPSET WS2812B
 

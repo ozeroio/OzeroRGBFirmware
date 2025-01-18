@@ -29,7 +29,7 @@ public:
 
 	Task(uint32_t code, const void *greenState, const void *blueState);
 
-	static void registerTask(const Task *task);
+	static void registerTask(Task *task);
 
 	static Task *fetchRegisteredEffect(uint32_t code);
 

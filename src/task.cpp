@@ -13,8 +13,8 @@ Task::Task(const uint32_t code,
 	}
 }
 
-void Task::registerTask(const Task *task) {
-	Task::registeredTasks[task->getCode()] = (Task *) task;
+void Task::registerTask(Task *task) {
+	Task::registeredTasks[task->getCode()] = static_cast<Task *>(task);
 }
 
 Task *Task::fetchRegisteredEffect(uint32_t code) {

@@ -14,7 +14,7 @@ SemaphoreHandle_t Processor::notifySemaphore = xSemaphoreCreateBinary();
 // until it is notified to TASK_FINISH. Then finishes task and releases the
 // finishSemaphore - to indicate all is done. Then goes for an eternal sleep until gets killed.
 void Processor::processingLoop(void *parameters) {
-	auto task = (Task *) parameters;
+	auto task = static_cast<Task *>(parameters);
 
 	if (task != nullptr) {
 

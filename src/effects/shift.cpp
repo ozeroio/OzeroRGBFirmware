@@ -47,7 +47,7 @@ ShiftEffectState *ShiftEffect::mallocStateMemory(uint8_t numSegments) {
 void ShiftEffect::setup() {
 	Effect::setup();
 	auto strip = Strip::getInstance();
-	auto state = (ShiftEffectState *) greenState;
+	auto state = static_cast<ShiftEffectState *>(greenState);
 	auto numLeds = Strip::numLeds();
 	position = 0;
 	shiftType = 0;
@@ -70,7 +70,7 @@ void ShiftEffect::setup() {
 }
 
 uint32_t ShiftEffect::loop() {
-	auto state = (ShiftEffectState *) greenState;
+	auto state = static_cast<ShiftEffectState *>(greenState);
 	uint8_t currentShiftType = shiftType;
 	if (state->shiftType == SHIFT_BOUNCY_SHIFT_TYPE) {
 		position += state->skipping;
@@ -94,7 +94,7 @@ uint32_t ShiftEffect::loop() {
 }
 
 uint32_t ShiftEffect::getSerializationSize() {
-	auto state = (ShiftEffectState *) greenState;
+	auto state = static_cast<ShiftEffectState *>(greenState);
 
 	// numSegments * its size.
 	auto segmentsSize = state->numSegments * segmentSize();
@@ -109,7 +109,7 @@ uint32_t ShiftEffect::getSerializationSize() {
 }
 
 void ShiftEffect::serialize(RandomAccess *randomAccess) {
-	auto state = (ShiftEffectState *) greenState;
+	auto state = static_cast<ShiftEffectState *>(greenState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	randomAccess->writeUnsignedChar(state->numSegments);
 	for (int i = 0; i < state->numSegments; i++) {
@@ -129,9 +129,9 @@ void ShiftEffect::serialize(RandomAccess *randomAccess) {
 
 void ShiftEffect::deserialize(RandomAccess *randomAccess) {
 	auto numSegments = min(uint8_t(SHIFT_MAX_NUM_SEGMENTS), randomAccess->readUnsignedChar());
-	freeStateMemory((ShiftEffectState *) blueState);
+	freeStateMemory(static_cast<ShiftEffectState *>(blueState));
 	blueState = mallocStateMemory(numSegments);
-	auto state = (ShiftEffectState *) blueState;
+	auto state = static_cast<ShiftEffectState *>(blueState);
 	xSemaphoreTake(semaphore, portMAX_DELAY);
 	state->numSegments = numSegments;
 	for (int i = 0; i < numSegments; i++) {
